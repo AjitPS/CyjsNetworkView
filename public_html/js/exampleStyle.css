@@ -32,9 +32,10 @@ root {
         border: solid 1px gray;*/
        }
        
-       #png_image {
+      /* CSS border for the empty Image tag for exported .png images.
+      #png_image {
         border: solid 1px #191919;
-       }
+       }*/
 
       /* Legend */
       #legend_picture {

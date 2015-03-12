@@ -638,8 +638,13 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
 
  // Export the graph as a JSON object in a new Tab and allow users to save it.
   function exportAsJson() {
-   console.log("cy.json: ");
-   console.log(cy.json());
+
+   var exportJson= cy.json(); // get JSON object for the network graph.
+//   console.log("cy.json: "+ exportJson);
+   
+   // Display in a new blank browser tab.
+//   window.open().document.write(exportJson); // for text data
+   window.open('data:application/json;' + (window.btoa?'base64,'+btoa(JSON.stringify(exportJson)):JSON.stringify(exportJson))); // for JSON data
   }
   
   // Export the graph as a .png image and allow users to save it.
@@ -648,9 +653,11 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
    var png64= cy.png(); // .setAttribute('crossOrigin', 'anonymous');
 //    console.log("PNG export: "+ png64);
 
-   // Put the png data in an img tag.
-   $('#png_image')[0].src= png64;
-//   $('#png_image')[0].target= "_blank";
+   // Put the png data in an empty img tag on this Tab.
+//   $('#png_image')[0].src= png64;
+
+   // Display the exported image in a new blank browser window instead of having it in the same window.
+   window.open(png64,'Image','width=1200px,height=600px,resizable=1');
   }
 
   // Show concept neighbourhood.

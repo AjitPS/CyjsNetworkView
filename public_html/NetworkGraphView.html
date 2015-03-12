@@ -71,11 +71,8 @@
 <br/>
 <div>
     Show concept neighbourhood: <input type="button" value="Show Neighbourhood" onclick="showNeighbourhood();" title="Display concept neighbourhood">
-    Export JSON: <input type="button" value="Export JSON" onclick="exportAsJson();">
-    Export image: <!-- <a href="#" id="exportPng">Export PNG
-    <a id="downloadImg" download="network_graph.jpg"></a>
-    <input type="submit" value="Export Image" onclick="exportAsImage();">-->
-    <input type="button" value="Export Image" onclick="exportAsImage();" title="Click to export Network Graph as a .png image (generated below)">
+    Export graph JSON: <input type="button" value="Export JSON" onclick="exportAsJson();" title="Export the Network graph as a JSON object and show it in a new Tab">
+    Export graph Image: <input type="button" value="Export Image" onclick="exportAsImage();" title="Export the Network graph as a .png image (generated below)">
 <!-- Show/ hide labels for concepts and relations: <input type="button" value="Show/ hide labels" onclick="showOrHideLabels();"> -->
 </div>
 <br/>
@@ -142,7 +139,7 @@
 
 <div>
     <!-- Empty image tag to hold the exported network graph.png image when "Export Image" feature is used. -->
-    <a target="_blank" alt="" title="Exported png Image"><img id="png_image"/></a>
+<!-- <img id="png_image" title="Exported png Image" alt=""/></a> -->
 </div>
 
 <!-- page footer -->
