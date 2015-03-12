@@ -25,8 +25,8 @@
 <script src="js/libs/dagre.js"></script>
 <script src="js/libs/springy.js"></script>
 
+<!-- <script type="text/javascript" src="js/sampleFiles/networkGraph.txt"></script> -->
 <!-- <script type="text/javascript" src="js/sampleFiles/networkGraph_small_new.txt"></script> -->
-<script type="text/javascript" src="js/sampleFiles/networkGraph.txt"></script>
 <!-- <script type="text/javascript" src="js/sampleFiles/networkGraph_20150109042806.txt"></script> -->
 <!-- <script type="text/javascript" src="js/sampleFiles/result_poplar.txt"></script> -->
 <script src="js/networkView_cyjs.js"></script>
@@ -37,7 +37,7 @@
 <br/><br/>
 <div>
 <form action='' method='POST' enctype='multipart/form-data'>
-    Select JSON file to generate network graph: <input type="file" id="jsonFile" name="userFile"><br>
+    Select JSON file to generate network graph: <input type="file" id="jsonFile"><br>
     Show Network: <input type="button" value="Show Network" onclick="showNetwork(document.getElementById('jsonFile').value);" title="Show network graph using cytoscapeJS">
 </form>
 </div>

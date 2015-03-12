@@ -6,16 +6,76 @@
  * @returns
  **/
 
-  var graphJSON;
+  var graphJSON= "";
+  var metadataJSON= "";
 
-  function showNetwork(jsonFile) {
-   // Read data from 'jsonFile'.
-   var file= jsonFile;
-   var textType = /text.*/;
-/*   if(file.type.match(textType)) {
+  function showNetwork2(jsonFile) {
+/*var client = new XMLHttpRequest();
+client.open('GET', jsonFile.value);
+client.onreadystatechange= function() {
+  alert(client.responseText);
+}
+client.send();      */
+ //  jsonFile.addEventListener('change', function(e) {
+ //      var file = jsonFile.files[0];
+       var file= jsonFile;
+       file.type= "text";
+       console.log("Read data from File: "+ file + " ; file.type: "+ file.type);
+ //      var textType = /text.*/;
+ //      if(file.type.match(textType)) {
+	  var reader= new FileReader();
+          reader.onload= function(e) {
+              var jsonContents= reader.result;
+              console.log("File read: result: "+ jsonContents);
+
+              var jsonDataVars= new Array(); //object to hold parsed JSON data.
+              jsonDataVars= jsonContents.split("]};");
+              graphJSON= jsonDataVars[0];
+              metadataJSON= jsonDataVars[1];
+
+              console.log("graphJSON: "+ graphJSON + "\n metadataJSON: "+ metadataJSON);
+             }
+
+          reader.readAsText(file); // read file.
+  //       }
+  //     else {
+  //         console.log("File not supported !");
+  //        }
+  //    });
+
+//   console.log("Read data from jsonFile: "+ jsonFile + " ; file.type: "+ jsonFile.type);
+
+/*   var file= jsonFile;
+   // Read data as text from 'jsonFile' (saved in .txt format).
+   var txtReader= new FileReader();
+   txtReader.onload= function(e) {
+//       var dataURL= reader.result;
+       var jsonContents= txtReader.result;
+       console.log("File read: result: "+ jsonContents);
+
+       var jsonDataVars= new Array(); //object to hold parsed JSON data.
+       jsonDataVars= jsonContents.split("]};");
+       graphJSON= jsonDataVars[0];
+       metadataJSON= jsonDataVars[1];
+
+       console.log("graphJSON: "+ graphJSON + "\n metadataJSON: "+ metadataJSON);
+      };
+   txtReader.readAsDataURL(file);*/
+
+   // Read JSON data from 'jsonFile'.
+//   var textType = /text.*/;
+/*   if(jsonFile.type.match(textType)) {
       var reader= new FileReader();
-      reader.onload= function(e) {
-          console.log("FileReader loaded: "+ reader.result);
+      reader.onload= function(evnt) { // Actions to perform after File loading event is complete.
+          var jsonContents= reader.result;
+          console.log("File read: result: "+ jsonContents);
+
+          var jsonDataVars= new Array(); //object to hold parsed JSON data.
+          jsonDataVars= jsonContents.split("]};");
+          graphJSON= jsonDataVars[0];
+          metadataJSON= jsonDataVars[1];
+
+          console.log("graphJSON: "+ graphJSON + "\n metadataJSON: "+ metadataJSON);
 	 };
       
       reader.readAsText(file); // read the file.
@@ -23,13 +83,42 @@
    else {
        console.log("File not supported !");
       }
-   
-//   console.log("JSON data read: graphJSON= "+ graphJSON);
 */
    // Initialize the cytoscapeJS container for Network View.
    initializeNetworkView();
   }
  
+  function showNetwork(jsonFile) {
+
+//    var fileContents= "";
+    // Read the JSON file's contents via an Ajax call in jQuery.
+ /*   $.get(jsonFile, function(respons) {
+     var jsonData = respons;
+     console.log("File read: jsonData: "+ jsonData);
+    });*/
+    
+    var jsonData= "";
+    $.ajax({
+    url: jsonFile, // the file url/ path
+//    type: 'get',
+    dataType: 'text',
+    success: function(resp) {
+        jsonData= String(resp);
+       }
+   });
+   console.log("File read: jsonData: "+ jsonData);
+
+   var jsonDataVars= new Array(); //object to hold parsed JSON data.
+   jsonDataVars= jsonData.split("]};");
+   graphJSON= jsonDataVars[0];
+   metadataJSON= jsonDataVars[1];
+
+   console.log("graphJSON: "+ graphJSON + "\n metadataJSON: "+ metadataJSON);
+
+   // Initialize the cytoscapeJS container for Network View.
+   initializeNetworkView();
+  }
+
   /** Define the default layout for the network, using CoLa layout from Cola.js (similar to the "Gem" layout in 
     * Ondex Web). */
    var defaultNetworkLayout= {
@@ -641,7 +730,7 @@ cy.cxtmenu(contextMenu); // set Context Menu for all the core elements.
 
    var exportJson= cy.json(); // get JSON object for the network graph.
 //   console.log("cy.json: "+ exportJson);
-   
+
    // Display in a new blank browser tab.
 //   window.open().document.write(exportJson); // for text data
    window.open('data:application/json;' + (window.btoa?'base64,'+btoa(JSON.stringify(exportJson)):JSON.stringify(exportJson))); // for JSON data
