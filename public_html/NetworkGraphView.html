@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="js/exampleStyle.css" rel="stylesheet" />
+<meta charset=utf-8 />
+<title>Network View - Cytoscape.js</title>
+<script src="js/libs/jquery-1.8.3.min.js"></script>
+<script src="js/libs/cytoscape.min.js"></script>
+<!-- <script src="http://ajax.googleapis.com/ajax/js/libs/jquery/1/jquery.min.js"></script>
+<script src="http://cytoscape.github.io/cytoscape.js/api/cytoscape.js-latest/cytoscape.min.js"></script> -->
+<script src="js/libs/jquery-ui.js"></script>
+<script src="js/libs/cytoscape-cxtmenu.js"></script>
+<!-- <script src="js/libs/jquery.cytoscape.js-toolbar.js"></script> -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/basic/jquery.qtip.min.js"></script>
+<link href="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/basic/jquery.qtip.min.css" rel="stylesheet" type="text/css" />
+<script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-qtip/70964f0306e770837dbe2b81197c12fdc7804e38/cytoscape-qtip.js"></script>
+<script src="http://medialize.github.io/jQuery-contextMenu/src/jquery.contextMenu.js" type="text/javascript"></script>
+<link href="http://medialize.github.io/jQuery-contextMenu/src/jquery.contextMenu.css" rel="stylesheet" type="text/css" />
+<script src="http://medialize.github.io/jQuery-contextMenu/src/jquery.ui.position.js" type="text/javascript"></script>
+<script src="js/libs/cola.v3.min.js"></script>
+<script src="js/libs/cola.adaptor.js"></script>
+
+<!-- Other Layouts -->
+<script src="js/libs/arbor.js"></script>
+<script src="js/libs/dagre.js"></script>
+<script src="js/libs/springy.js"></script>
+
+<!-- <script type="text/javascript" src="js/sampleFiles/networkGraph_small_new.txt"></script> -->
+<script type="text/javascript" src="js/sampleFiles/networkGraph.txt"></script>
+<!-- <script type="text/javascript" src="js/sampleFiles/networkGraph_20150109042806.txt"></script> -->
+<!-- <script type="text/javascript" src="js/sampleFiles/result_poplar.txt"></script> -->
+<script src="js/networkView_cyjs.js"></script>
+
+</head>
+<body>
+<b>Network Graph using CytoscapeJS</b>
+<br/><br/>
+<div>
+<form action='' method='POST' enctype='multipart/form-data'>
+    Select JSON file to generate network graph: <input type="file" id="jsonFile" name="userFile"><br>
+    Show Network: <input type="button" value="Show Network" onclick="showNetwork(document.getElementById('jsonFile').value);" title="Show network graph using cytoscapeJS">
+</form>
+</div>
+
+<hr>
+
+<div id=layouts_container>
+<table id=layouts_frame cellspacing=1>
+<thead><u>Layouts:</u></thead>
+<tr>
+    <td align=center><input type="radio" name="layoutButton" id="default" value="Default layout" onclick="setDefaultLayout();" checked>Default (CoLa)</td>
+    <td align=center><input type="radio" name="layoutButton" id="circle" value="Circle layout" onclick="setCircleLayout();">Circular</td>
+    <td align=center><input type="radio" name="layoutButton" id="arbor" value="Arbor layout" onclick="setArborLayout();">Arbor</td>
+    <td align=center><input type="radio" name="layoutButton" id="cose" value="Cose layout" onclick="setCoseLayout();">Cose</td>
+<!--</tr>
+<tr>-->
+    <td align=center><input type="radio" name="layoutButton" id="dagre" value="Tree layout" onclick="setTreeLayout();">Tree</td>
+    <td align=center><input type="radio" name="layoutButton" id="breadthfirst" value="Breadthfirst layout" onclick="setBreadthfirstLayout();">Breadthfirst</td>
+    <td align=center><input type="radio" name="layoutButton" id="springy" value="Springy layout" onclick="setSpringyLayout();">Springy</td>
+    <td align=center><input type="radio" name="layoutButton" id="grid" value="Grid layout" onclick="setGridLayout();">Grid</td>
+</tr>
+</table>
+</div>
+
+<br/>
+<div>
+    Annotate relations by attribute: <input type="button" value="Annotate" onclick="annotateByAttribute();" title="Annotate relations by any attribute">
+    Search for concept: <input type="text" id="txtSearch" placeholder="Search..." /> <input type="button" value="Search" onclick="findConcept(document.getElementById('txtSearch').value);" title="Search by concept name">
+    Reset graph: <input type="button" value="Reset" onclick="resetGraph();" title="Re-fit, pan and zoom the graph">
+</div>
+<br/>
+<div>
+    Show concept neighbourhood: <input type="button" value="Show Neighbourhood" onclick="showNeighbourhood();" title="Display concept neighbourhood">
+    Export JSON: <input type="button" value="Export JSON" onclick="exportAsJson();">
+    Export image: <!-- <a href="#" id="exportPng">Export PNG
+    <a id="downloadImg" download="network_graph.jpg"></a>
+    <input type="submit" value="Export Image" onclick="exportAsImage();">-->
+    <input type="button" value="Export Image" onclick="exportAsImage();" title="Click to export Network Graph as a .png image (generated below)">
+<!-- Show/ hide labels for concepts and relations: <input type="button" value="Show/ hide labels" onclick="showOrHideLabels();"> -->
+</div>
+<br/>
+
+<!-- CytoscapeJS container -->
+<div id="cy"></div>
+<br/>
+
+<!-- Information dialog box to show clicked items' Info./ list of Selected elements -->
+<div id="infoDialog"></div>
+<br/>
+
+<!-- JTable to show Item Info. -->
+<div id="itemInfo" title="Item Info"></div>
+<!-- <div id="itemInfo" title="Item Info" style="border: thin">Item Info</div> -->
+<br/>
+
+<!-- Legend container with pictures -->
+<div id=legend_picture>
+    <div id=legend_container>
+        <table id=legend_frame cellspacing=1>
+            <tr>
+                <td align=center><img src=image/Gene.png></td>
+		<td align=center><img src=image/Protein.png></td>
+		<td align=center><img src=image/Pathway.png></td>
+		<td align=center><img src=image/Compound.png></td>
+		<td align=center><img src=image/Enzyme.png></td>
+		<td align=center><img src=image/Reaction.png></td>
+		<td align=center><img src=image/Publication.png></td>
+            </tr>
+            <tr>
+                <td align=center><font size=1.8px>Gene</font></td>
+		<td align=center><font size=1.8px>Protein</font></td>
+		<td align=center><font size=1.8px>Pathway</font></td>
+		<td align=center><font size=1.8px>SNP</font></td>
+		<td align=center><font size=1.8px>Enzyme</font></td>
+		<td align=center><font size=1.8px>Reaction</font></td>
+		<td align=center><font size=1.8px>Publication</font></td>
+            </tr>
+            <tr>
+                <td align=center></td>
+            </tr>
+            <tr>
+                <td align=center><img src=image/Phenotype.png></td>
+		<td align=center><img src=image/Bioogical_proccess.png></td>
+		<td align=center><img src=image/Cellular_component.png></td>
+		<td align=center><img src=image/Protein_domain.png></td>
+		<td align=center><img src=image/Trait_ontology.png></td>
+		<td align=center><img src=image/Molecular_function.png></td>
+		<td align=center><img src=image/Enzyme_clasification.png></td>
+            </tr>
+            <tr>
+                <td align=center><font size=1.8px>Phenotype</font></td>
+		<td align=center><font size=1.8px>Biol. Proccess</font></td>
+		<td align=center><font size=1.8px>Cell. Component</font></td>
+		<td align=center><font size=1.8px>Protein Domain</font></td>
+		<td align=center><font size=1.8px>Trait Ontology</font></td>
+		<td align=center><font size=1.8px>Mol. Function</font></td>
+		<td align=center><font size=1.8px>Enzyme Classification</font></td>
+            </tr>
+        </table>
+    </div>
+</div>;
+
+<div>
+    <!-- Empty image tag to hold the exported network graph.png image when "Export Image" feature is used. -->
+    <a target="_blank" alt="" title="Exported png Image"><img id="png_image"/></a>
+</div>
+
+<!-- page footer -->
+<div id="pageFooter">QTLNetMiner: Network View example using Cytoscape.js</div>
+</body>
+</html>
