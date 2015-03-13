@@ -6,8 +6,93 @@
  * @returns
  **/
 
-  var graphJSON= "";
-  var metadataJSON= "";
+//  var graphJSON= "";
+//  var metadataJSON= "";
+  var selectedJSONfile= "";
+
+  var form2= document.getElementById('file_upload_form');
+  var fileSelect= document.getElementById('file_select');
+  var uploadButton= document.getElementById('upload_button');
+/*  form2.onsubmit = function(event) {
+   event.preventDefault();
+
+   // Update button text.
+   uploadButton.innerHTML = 'Uploading...';
+
+   // Get the selected files from the input.
+   var files= fileSelect.files;
+   // Create a new FormData object.
+   var formData= new FormData();
+
+   var file= files[0]; // get the selected file.
+
+   // Add the file to the request.
+   formData.append('jsonFile', file, file.name);
+   
+   console.log("formData: "+ formData);
+
+   // Set up the request.
+   var xhr= new XMLHttpRequest();
+   
+   // Open the connection.
+   xhr.open('POST', 'handler.php', true);
+   
+   // Set up a handler for when the request finishes.
+   xhr.onload= function () {
+    if(xhr.status === 200) {
+       // File uploaded.
+       uploadButton.innerHTML= 'Upload';
+      }
+    else {
+      alert('An error occurred ! File upload failed.');
+     }
+   };
+   
+   // Send the uploaded data.
+   xhr.send(formData);
+  };
+*/
+        $("#file_upload_form").click(function () {
+/*
+            // Create an invisible iframe to upload the selected file's contents to.
+            var iframe= $('<iframe name="postiframe" id="postiframe" style="display: none"></iframe>');
+            
+            $("body").append(iframe);
+
+            var form= $('#file_upload_form');
+            form.attr("action", "/upload.aspx");
+//            form.attr("method", "post");
+
+            form.attr("encoding", "multipart/form-data");
+//            form.attr("enctype", "multipart/form-data");
+
+            form.attr("target", "postiframe");
+            form.attr("file", $('#jsonFile').val());
+            form.submit();
+
+            $("#postiframe").load(function () {
+                iframeContents= this.contentWindow.document.body.innerHTML;
+                $("#textarea").html(iframeContents);
+                console.log("Uploaded file's contents: "+ iframeContents);
+            });
+
+            return false;*/
+         //Enable the "Show Network" button.
+         $("#showNetGraph").disabled = false;
+        });
+
+  function uploadSelectedFile(uploadFile) {
+   console.log("upload selected file: "+ uploadFile);
+
+   // Upload the selected local file to 'uploads/' directory on the server.
+   
+
+   // Save the uploaded file's location on the server.
+//   selectedJSONfile= "uploads/"+ uploadFile;
+   
+   //Enable the "Show Network" button.
+   document.getElementById("showNetGraph").disabled = false;
+  }
 
   function showNetwork2(jsonFile) {
 /*var client = new XMLHttpRequest();
@@ -88,19 +173,22 @@ client.send();      */
    initializeNetworkView();
   }
  
-  function showNetwork(jsonFile) {
+  function showNetwork() {
 
+/*    var json_File= selectedJSONfile; */
+/*
 //    var fileContents= "";
     // Read the JSON file's contents via an Ajax call in jQuery.
- /*   $.get(jsonFile, function(respons) {
+    $.get(json_File, function(respons) {
      var jsonData = respons;
      console.log("File read: jsonData: "+ jsonData);
     });*/
     
-    var jsonData= "";
+    // 2nd approach:
+/*    var jsonData= "";
     $.ajax({
-    url: jsonFile, // the file url/ path
-//    type: 'get',
+    url: json_File, // the file url/ path // e.g., http://qtlnetminer-test.rothamsted.ac.uk/poplar_data/result_1424531346098.json
+    type: 'get',
     dataType: 'text',
     success: function(resp) {
         jsonData= String(resp);
@@ -112,8 +200,8 @@ client.send();      */
    jsonDataVars= jsonData.split("]};");
    graphJSON= jsonDataVars[0];
    metadataJSON= jsonDataVars[1];
-
-   console.log("graphJSON: "+ graphJSON + "\n metadataJSON: "+ metadataJSON);
+*/
+   console.log("graphJSON: "+ graphJSON/* + "\n metadataJSON: "+ metadataJSON*/);
 
    // Initialize the cytoscapeJS container for Network View.
    initializeNetworkView();

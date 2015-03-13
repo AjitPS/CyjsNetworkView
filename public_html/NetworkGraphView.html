@@ -25,6 +25,7 @@
 <script src="js/libs/dagre.js"></script>
 <script src="js/libs/springy.js"></script>
 
+<script type="text/javascript" src="js/sampleFiles/networkGraph.json"></script>
 <!-- <script type="text/javascript" src="js/sampleFiles/networkGraph.txt"></script> -->
 <!-- <script type="text/javascript" src="js/sampleFiles/networkGraph_small_new.txt"></script> -->
 <!-- <script type="text/javascript" src="js/sampleFiles/networkGraph_20150109042806.txt"></script> -->
@@ -36,10 +37,26 @@
 <b>Network Graph using CytoscapeJS</b>
 <br/><br/>
 <div>
-<form action='' method='POST' enctype='multipart/form-data'>
-    Select JSON file to generate network graph: <input type="file" id="jsonFile"><br>
-    Show Network: <input type="button" value="Show Network" onclick="showNetwork(document.getElementById('jsonFile').value);" title="Show network graph using cytoscapeJS">
+<!-- <form action='' method='POST' enctype='multipart/form-data'>
+    Select JSON file to generate network graph: <input type="file" id="jsonFile">
+    <input type="button" id="uploadFile" value="Upload" onclick="uploadSelectedFile(document.getElementById('jsonFile').value);" title="Upload the selected file"><br>
+    Show Network: <input type="button" id="showNetGraph" disabled value="Show Network" onclick="showNetwork();" title="Show network graph using cytoscapeJS">
+</form> -->
+<!-- <form id="file_upload_form" method="post" enctype="multipart/form-data" action="upload.php">
+<input name="file" id="file" size="27" type="file" /><br />
+<input type="submit" name="action" value="Upload" /><br />
+<iframe id="upload_target" name="upload_target" src="" style="width:0;height:0;border:0px solid #fff;"></iframe>
+</form> -->
+<form id="file_upload_form" method='POST' enctype='multipart/form-data'>
+  Select JSON file to generate network graph: <input type="file" id="file_select" name="jsonFile"/>
+<!--  <button type="submit" id="upload_button" value="Upload File">Upload</button> -->
+  <input type="button" id="uploadFile" value="Upload" onclick="uploadSelectedFile(document.getElementById('file_select').value);" title="Upload the selected file"><br>
 </form>
+<br>
+    Show Network: <input type="button" id="showNetGraph" disabled value="Show Network" onclick="showNetwork();" title="Show network graph using cytoscapeJS">
+</div>
+
+<div id="textarea">
 </div>
 
 <hr>
